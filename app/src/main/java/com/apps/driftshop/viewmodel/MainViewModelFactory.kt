@@ -1,13 +1,15 @@
 package com.apps.driftshop.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.apps.driftshop.api.ProductRepository
 
-class MainViewModelFactory (private val productRepository: ProductRepository): ViewModelProvider.Factory {
+class MainViewModelFactory (val application: Application): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(MainViewModel::class.java)){
-            return MainViewModel(productRepository) as T
+            @Suppress("UNCHECKED_CAST")
+            return MainViewModel(application) as T
         }
         throw java.lang.IllegalArgumentException("ViewModel Not Found")
     }

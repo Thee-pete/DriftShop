@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.apps.driftshop.model.Product
+import retrofit2.Call
 
 @Dao
 interface ProductDao {
@@ -13,5 +14,5 @@ interface ProductDao {
     fun getProducts(): LiveData<List<Product>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(product: Product)
+    fun insert(product: List<Product>)
 }

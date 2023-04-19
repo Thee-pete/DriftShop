@@ -29,12 +29,14 @@ class MainActivity : AppCompatActivity() {
         productAdapter = ProductAdapter()
         recyclerView.adapter = productAdapter
 
-        val productDao = ProductDatabase.getDatabase(application).productDao()
-        val apiInterface = ApiInterface.getInstance()
-        val productRepository = ProductRepository(apiInterface,productDao)
-        val mainViewModel = ViewModelProvider(this, MainViewModelFactory(productRepository)).get(MainViewModel::class.java)
 
-        mainViewModel.getProducts().observe(this, Observer { products->
+        val mainViewModel: MainViewModel by lazy {
+            ViewModelProvider(
+                this,
+                MainViewModelFactory(application)
+            ).get(MainViewModel::class.java)
+        }
+        mainViewModel.products.observe(this, Observer { products->
             productAdapter.setProducts(products)
         })
 

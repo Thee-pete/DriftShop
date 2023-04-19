@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 interface ApiInterface {
     @GET("products")
-    fun getProducts():Call<List<Product>>
+    suspend fun getProducts():List<Product>
 
     companion object{
         var apiInstance:ApiInterface? =null

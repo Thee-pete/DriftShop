@@ -1,22 +1,41 @@
 package com.apps.driftshop.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
 import com.apps.driftshop.api.ApiInterface
 import com.apps.driftshop.api.ProductRepository
 import com.apps.driftshop.model.Product
 import com.apps.driftshop.room.ProductDatabase
+import kotlinx.coroutines.launch
+import java.io.IOException
 
-class MainViewModel(private val productRepository: ProductRepository) : ViewModel() {
-    private val products = MutableLiveData<List<Product>>()
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val productRepository = ProductRepository(ProductDatabase.getDatabase(application))
+    val products = productRepository.products
+    private val _products = MutableLiveData<List<Product>>()
+    private var _eventNetworkError = MutableLiveData<Boolean>(false)
+    val eventNetworkError: LiveData<Boolean>get() = _eventNetworkError
+    private var _isNetworkErrorShown = MutableLiveData<Boolean>(false)
+    val isNetworkErrorShown: LiveData<Boolean>get() = _isNetworkErrorShown
+
     init{
-        fetchProducts()
+        refreshDataFromRepository()
     }
-    private fun fetchProducts(){
-        products.postValue(productRepository.getAllProducts().value)
+    private fun refreshDataFromRepository(){
+        viewModelScope.launch {
+            try{
+                productRepository.refreshVideos()
+                _eventNetworkError.value = false
+                _isNetworkErrorShown.value = false
+            }catch(networkError: IOException){
+                if(products.value.isNullOrEmpty())
+                    _isNetworkErrorShown.value = true
+
+            }
+        }
     }
-    fun getProducts(): LiveData<List<Product>>{
-        return products
+    fun onNetworkErrorShow(){
+        _isNetworkErrorShown.value = false
     }
+
 }
