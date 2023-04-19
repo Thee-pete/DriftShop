@@ -1,13 +1,14 @@
 package com.apps.driftshop.api
 
 import com.apps.driftshop.model.Product
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 interface ApiInterface {
     @GET("products")
-    suspend fun getProducts():List<Product>
+    fun getProducts():Call<List<Product>>
 
     companion object{
         var apiInstance:ApiInterface? =null
