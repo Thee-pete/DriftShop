@@ -24,7 +24,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun refreshDataFromRepository(){
         viewModelScope.launch {
             try{
-                productRepository.refreshVideos()
+                productRepository.refreshProducts()
                 _eventNetworkError.value = false
                 _isNetworkErrorShown.value = false
             }catch(networkError: IOException){

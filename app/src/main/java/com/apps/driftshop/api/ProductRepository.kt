@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 class ProductRepository(private val productDatabase: ProductDatabase){
     val products: LiveData<List<Product>> = productDatabase.productDao().getProducts()
 
-    suspend fun refreshVideos() {
+    suspend fun refreshProducts() {
         withContext(Dispatchers.IO) {
             val productList = ApiInterface.getInstance().getProducts()
             productDatabase.productDao().insert(productList)
